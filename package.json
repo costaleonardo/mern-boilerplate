@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Boilerplate for developing MERN applications.\"",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server:start": "nodemon server.js"
+  },
   "repository": "git@github.com:costaleonardo/mern-boilerplate.git",
   "author": "Leonardo da Costa",
   "license": "MIT",
