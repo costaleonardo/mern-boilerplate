@@ -141,4 +141,60 @@ router.post(
   }
 );
 
+// @route  GET api/profile/all
+// @desc   Get all profiles
+// @access Public
+router.get('/all', (req, res) => {
+  let errors = {};
+
+  Profile.find()
+    .populate('user', ['name'])
+    .then(profiles => {
+      if (!profiles) {
+        errors.noProfile = 'There are no profiles.';
+        return res.status(404).json(errors);
+      }
+
+      res.json(profiles);
+    })
+    .catch(err => res.status(404).json({ profile: 'There are no profiles.' }));
+});
+
+// @route  GET api/profile/username/:username
+// @desc   Get profile by username
+// @access Public
+router.get('/username/:username', (req, res) => {
+  let errors = {};
+
+  Profile.findOne({ username: req.params.username})
+    .populate('user', ['name'])
+    .then(profile => {
+      if (!profile) {
+        errors.noProfile = 'There is no profile for this user.';
+        return res.status(404).json(errors);
+      }
+
+      res.json(profile)
+    })
+    .catch(err => res.status(404).json(err));
+});
+
+// @route  GET api/profile/user/:user_id
+// @desc   Get profile by user ID
+// @access Public
+router.get('/user/:user_id', (req, res) => {
+  let errors = {};
+
+  Profile.findOne({ user: req.params.user_id })
+    .then(profile => {
+      if (!profile) {
+        errors.noProfile = 'There is no profile for this user.';
+        return res.status(404).json(erros);
+      }
+
+      res.json(profile);
+    })
+    .catch(err => res.status(404).json({ profile: 'There is no profile for this.' }));
+});
+
 module.exports = router;
