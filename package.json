@@ -4,13 +4,16 @@
   "description": "Boilerplate for developing MERN applications.\"",
   "main": "server.js",
   "scripts": {
+    "client": "npm start --prefix client",
     "start": "node server.js",
-    "server:start": "nodemon server.js"
+    "server:start": "nodemon server.js",
+    "dev:start": "concurrently \"npm run server:start\" \"npm run client\""
   },
   "repository": "git@github.com:costaleonardo/mern-boilerplate.git",
   "author": "Leonardo da Costa",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "concurrently": "^4.0.1",
