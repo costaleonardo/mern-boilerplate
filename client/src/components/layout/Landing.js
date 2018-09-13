@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Landing extends Component {
   render() {
@@ -11,8 +12,12 @@ class Landing extends Component {
                 <h1 className="display-3 mb-4">MERN Boilerplate
                 </h1>
                 <p className="lead">Create Full-Stack applications using this simple boilerplate.</p>
-                <a href="register.html" className="btn btn-lg btn-info mr-2">Sign Up</a>
-                <a href="login.html" className="btn btn-lg">Login</a>
+                <Link to="/register" className="btn btn-lg btn-info mr-2">
+                  Sign Up
+                </Link>
+                <Link to="/login" className="btn btn-lg">
+                  Login
+                </Link>
               </div>
             </div>
           </div>
