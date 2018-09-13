@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import classnames from 'classnames';
+
+import { registerUser } from '../../actions/authActions';
 
 class Register extends Component {
   constructor(props) {
@@ -17,6 +21,12 @@ class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentWillReceiveProps (nextProps) {
+		if (nextProps.errors) {
+			this.setState({ errors: nextProps.errors });
+		}
+	}
+
   onChange (e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -31,10 +41,7 @@ class Register extends Component {
       passwordTwo: this.state.passwordTwo
     };
 
-    console.log(newUser);
-    axios.post('/api/users/register', newUser)
-      .then(res => console.log(res.data))
-      .catch(err => this.setState({ errors: err.response.data }));
+    this.props.registerUser(newUser, this.props.history);    
   }
 
   render() {
@@ -56,7 +63,7 @@ class Register extends Component {
                     })}
                     placeholder="Name" 
                     name="name" 
-                    value={this.state.name}
+                    value={this.state.name || ''}
                     onChange={this.onChange}
                   />
                   { errors.name && (<div className="invalid-feedback">{errors.name}</div>) }
@@ -68,7 +75,7 @@ class Register extends Component {
                       'is-invalid': errors.email
                     })}
                     placeholder="Email Address" 
-                    value={this.state.email}
+                    value={this.state.email || ''}
                     name="email" 
                     onChange={this.onChange}
                   />
@@ -81,7 +88,7 @@ class Register extends Component {
                       'is-invalid': errors.password
                     })}
                     placeholder="Password" 
-                    value={this.state.password}
+                    value={this.state.password || ''}
                     name="password" 
                     onChange={this.onChange}
                   />
@@ -94,7 +101,7 @@ class Register extends Component {
                       'is-invalid': errors.passwordTwo
                     })}
                     placeholder="Confirm Password" 
-                    value={this.state.passwordTwo}
+                    value={this.state.passwordTwo || ''}
                     name="passwordTwo" 
                     onChange={this.onChange}
                   />
@@ -110,4 +117,15 @@ class Register extends Component {
   };
 };
 
-export default Register;
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(mapStateToProps, { registerUser })(withRouter(Register));
