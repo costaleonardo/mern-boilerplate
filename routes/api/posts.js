@@ -117,7 +117,7 @@ router.post(
   }
 );
 
-// @route  POST api.posts/unlike/:post_id
+// @route  POST api/posts/unlike/:post_id
 // @desc   Unlike post with ID
 // @access Private
 router.post(
@@ -149,6 +149,69 @@ router.post(
         })
         .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
     });
+  }
+);
+
+// @router POST api/posts/comment/:post_id
+// @desc   Add comment to a post
+// @access Private
+router.post(
+  '/comment/:post_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatePostInput(req.body);
+
+    if (!isValid) {
+      return res.json(400).json(errors);
+    }
+
+    Post
+      .findById(req.params.post_id)
+      .then(post => {
+        const newComment = {
+          text: req.body.text,
+          name: req.body.name,
+          user: req.user.id
+        };
+
+        post.comments.unshift(newComment);
+
+        post
+          .save()
+          .then(post => res.json(post))
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => res.status(404).json({ postNotFound: 'No post found.' }));
+  }
+);
+
+// @route  DELETE api/posts/comment/:post_id/:comment_id
+// @desc   Delete comment from post by id
+// @access Private
+router.delete(
+  '/comment/:post_id/:comment_id',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    Post
+    .findById(req.params.post_id)
+    .then(post => {
+      // Check if comment exists
+      if (post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+        return res.status(404).json({ commentDoesNotExist: 'Comment does not exist.' });
+      }
+
+      const removeIndex = post.comments
+        .map(item => item._id.toString())
+        .indexOf(req.params.comment_id);
+
+      post.comments.splice(removeIndex, 1);
+
+      post
+        .save()
+        .then(post => res.json(post))
+        .catch(err => res.status(404).json(err));
+    })
+    .catch(err => res.status(404).json({ commentNotFound: 'No comment found.' }));
   }
 );
 
