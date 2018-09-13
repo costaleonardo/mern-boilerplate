@@ -63,7 +63,7 @@ class Register extends Component {
                     })}
                     placeholder="Name" 
                     name="name" 
-                    value={this.state.name || ''}
+                    value={this.state.name }
                     onChange={this.onChange}
                   />
                   { errors.name && (<div className="invalid-feedback">{errors.name}</div>) }
@@ -75,7 +75,7 @@ class Register extends Component {
                       'is-invalid': errors.email
                     })}
                     placeholder="Email Address" 
-                    value={this.state.email || ''}
+                    value={this.state.email}
                     name="email" 
                     onChange={this.onChange}
                   />
